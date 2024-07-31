@@ -27,7 +27,9 @@ public class ProcessSyncPlayerQuit implements SynchronousProcess {
             commandManager.runCommandsOnLogout(player);
         } else {
             limboService.restoreData(player);
-            player.saveData(); // #1238: Speed is sometimes not restored properly
+            // Save the player only if player has actually fully loaded into the server
+            // https://github.com/AuthMe/AuthMeReloaded/issues/2855
+            if (player.getLastLogin() != 0) player.saveData(); // #1238: Speed is sometimes not restored properly
         }
         player.leaveVehicle();
     }
